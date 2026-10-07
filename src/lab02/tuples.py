@@ -4,14 +4,16 @@ def format_record(rec: tuple[str, str, float]) -> str:
 
     if not isinstance(rec, tuple):
         raise TypeError('Аргумент функции должен быть кортежем')
-    
-    fio, group, gpa = rec # кортеж с данными о user'e
 
     if len(rec) != 3:
-            raise ValueError('Запись должна содержать ровно 3 элемента: ФИО, группа, GPA')
+                raise ValueError('Запись должна содержать ровно 3 элемента: ФИО, группа, GPA')
+
+    fio, group, gpa = rec # кортеж с данными о user'e
+
     
     if not isinstance(fio, str) or not isinstance(group, str):
         raise TypeError('ФИО и группа студента должны быть в строчном виде данных')
+    
     if not (0.0 <= gpa <= 5.0):
         raise ValueError('GPA студента должен быть in range(0.0 - 5.0)')
     
