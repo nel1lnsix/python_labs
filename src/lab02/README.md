@@ -87,7 +87,6 @@ for test in test_cases_flatten:
 ### Функция на проверку правильности матрицы:
 ```py
 def _check_rectangular(mat: list[list[float | int]]) -> int:
-    """Проверяет, что все строки одной длины, и возвращает эту длину."""
     row_length = len(mat[0])
     for row in mat:
         if len(row) != row_length:
