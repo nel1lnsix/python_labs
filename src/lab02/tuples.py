@@ -1,7 +1,7 @@
 """ЛР2, задание C — записи."""
 
 def format_record(rec: tuple[str, str, float]) -> str:
-    
+
     if not isinstance(rec, tuple):
         raise TypeError('Аргумент функции должен быть кортежем')
     
@@ -16,7 +16,6 @@ def format_record(rec: tuple[str, str, float]) -> str:
         raise ValueError('GPA студента должен быть in range(0.0 - 5.0)')
     
     parts_fio = fio.split()
-    parts_fio = [p for p in parts_fio if p]
 
     if len(parts_fio) < 2:
         raise ValueError('ФИО не может состоять из менее 2-ух слов')
