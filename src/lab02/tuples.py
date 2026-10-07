@@ -2,6 +2,9 @@
 
 def format_record(rec: tuple[str, str, float]) -> str:
     fio, group, gpa = rec # кортеж с данными о user'e
+
+    if len(rec) != 3:
+            raise ValueError('Запись должна содержать ровно 3 элемента: ФИО, группа, GPA')
     
     if not isinstance(fio, str) or not isinstance(group, str):
         raise TypeError('ФИО и группа студента должны быть в строчном виде данных')
