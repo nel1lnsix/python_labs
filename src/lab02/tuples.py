@@ -1,6 +1,10 @@
 """ЛР2, задание C — записи."""
 
 def format_record(rec: tuple[str, str, float]) -> str:
+    
+    if not isinstance(rec, tuple):
+        raise TypeError('Аргумент функции должен быть кортежем')
+    
     fio, group, gpa = rec # кортеж с данными о user'e
 
     if len(rec) != 3:
