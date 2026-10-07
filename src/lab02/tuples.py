@@ -12,7 +12,7 @@ def format_record(rec: tuple[str, str, float]) -> str:
     parts_fio = [p for p in parts_fio if p]
 
     if len(parts_fio) < 2:
-        raise ValueError('ФИО содержит минимум два слова')
+        raise ValueError('ФИО не может состоять из менее 2-ух слов')
     
     surname = parts_fio[0].capitalize()
     initials = '.'.join(p[0].upper() for p in parts_fio[1:]) + '.' 
@@ -24,14 +24,15 @@ def format_record(rec: tuple[str, str, float]) -> str:
 '''Тест кейсы:'''
 
 #Для функции format_record:
-test_cases = [("Иванов Иван Иванович", "BIVT-25", 4.6),
-("Петров Пётр", "IKBO-12", 5.0), 
-("Петров Пётр Петрович", "IKBO-12", 5.0), ("  сидорова  анна   сергеевна ", "ABB-01", 3.999), ("Курин Вильян Энкорденко", "BIVT-33", 6), ("Димасик", "DSBA-26", 2)] 
+if __name__ == "__main__":
 
-for case in test_cases:
-    try:
-        print(format_record(case))
-    except ValueError as er1:
-        print('ValueError:', er1)
-    except TypeError as er2:
-        print('TypeError:', er2)
+    test_cases = [("Иванов Иван Иванович", "BIVT-25", 4.6), ("Петров Пётр", "IKBO-12", 5.0), 
+    ("Петров Пётр Петрович", "IKBO-12", 5.0), ("  сидорова  анна   сергеевна ", "ABB-01", 3.999), ("Курин Вильян Энкорденко", "BIVT-33", 6), ("Димасик", "DSBA-26", 2)] 
+
+    for case in test_cases:
+        try:
+            print(format_record(case))
+        except ValueError as er1:
+            print('ValueError:', er1)
+        except TypeError as er2:
+            print('TypeError:', er2)

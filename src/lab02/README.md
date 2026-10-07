@@ -22,7 +22,7 @@ def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
 ```
 ### Вернуть отсортированный список уникальных значений (по возрастанию).
 ```py
-    def unique_sorted(nums: list[float | int]) -> list[float | int]:
+def unique_sorted(nums: list[float | int]) -> list[float | int]:
 
     if not nums:
         return []
@@ -41,15 +41,16 @@ def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
 ```
 ### «Расплющить» список списков/кортежей в один список по строкам (row-major).
 ```py
-    def flatten(mat: list[list | tuple]) -> list:
+def flatten(mat: list[list | tuple]) -> list:
 
     result = []
     for row in mat:
         if not isinstance(row, (list, tuple)):
             raise TypeError(f"каждый элемент матрицы должен быть списком или кортежем, дан {type(row).__name__}")
         result.extend(row)
-    return resul
+    return result
 ```
+
 # ----------------------------------------
 ## Тест-кейсы для задания А
 #### Для функции min_max:
@@ -57,8 +58,9 @@ def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
 print(min_max([3, -1, 5, 5, 0])) # -> (-1, 5)    
 print(min_max([42])) # -> (42, 42)        
 print(min_max([-5, -2, -9])) # -> (-9, -2)  
-print(min_max([1.5, 2, 2.0, -3.1])) # -> (-3.1, 2.0)
- ```         
+print(min_max([1.5, 2, 2.0, -3.1])) # -> (-3.1, 2)
+```
+
 #### Для функции unique_sorted:
 ```py
 print(unique_sorted([3, 1, 2, 1, 3])) # -> [1, 2, 3]  
@@ -82,17 +84,27 @@ for test in test_cases_flatten:
 
 Файл: [matrix.py](matrix.py)
 
+### Функция на проверку правильности матрицы:
+```py
+def _check_rectangular(mat: list[list[float | int]]) -> int:
+    """Проверяет, что все строки одной длины, и возвращает эту длину."""
+    row_length = len(mat[0])
+    for row in mat:
+        if len(row) != row_length:
+            raise ValueError("матрица рваная — строки должны быть одинаковой длины")
+    return row_length
+```
+
 ### Поменять строки и столбцы местами. 
 ```py
+from matrix import _check_rectangular # См. функцию выше
+
 def transpose(mat: list[list[float | int]]) -> list[list]:
     
     if not mat:
         return []
 
-    row_length = len(mat[0])
-    for row in mat:
-        if len(row) != row_length:
-            raise ValueError("матрица рваная — строки должны быть одинаковой длины")
+    row_length = _check_rectangular(mat)
 
     result = []
     for col_idx in range(row_length):
@@ -105,29 +117,27 @@ def transpose(mat: list[list[float | int]]) -> list[list]:
 ```
 ### Сумма по каждой строке.
 ```py
+from matrix import _check_rectangular # См. функцию выше
+
 def row_sums(mat: list[list[float | int]]) -> list[float]:
     
     if not mat:
         return []
 
-    row_length = len(mat[0])
-    for row in mat:
-        if len(row) != row_length:
-            raise ValueError("матрица рваная — строки должны быть одинаковой длины")
+    _check_rectangular(mat)
 
     return [sum(row) for row in mat]
 ```
 ### Сумма по каждому столбцу.
 ```py
+from matrix import _check_rectangular # См. функцию выше
+
 def col_sums(mat: list[list[float | int]]) -> list[float]:
     
     if not mat:
         return []
 
-    row_length = len(mat[0])
-    for row in mat:
-        if len(row) != row_length:
-            raise ValueError("матрица рваная — строки должны быть одинаковой длины")
+    row_length = _check_rectangular(mat)
 
     result = []
     for col_idx in range(row_length):
@@ -139,7 +149,7 @@ def col_sums(mat: list[list[float | int]]) -> list[float]:
     return result
 ```
 # ----------------------------------------
-## Тест-кейсы для задания Б
+## Тест-кейсы для задания B
 #### Для функции transpose:
 ```py
 test_Cases_transpose = [[[1, 2, 3]], [[1], [2], [3]], [[1, 2], [3, 4]], [], [[1, 2], [3]]]
@@ -157,7 +167,7 @@ for case in test_Cases_row_sums:
         print(row_sums(case))
     except ValueError as error:
         print("ValueError:", error)
-```  
+```
 
 #### Для функции col_sums:
 ```py
@@ -173,6 +183,8 @@ for case in test_Cases_col_sums:
 
 ## Задание C — Кортежи: запись студента
 
+Файл: [tuples.py](tuples.py)
+
 ```py
 def format_record(rec: tuple[str, str, float]) -> str:
     fio, group, gpa = rec # кортеж с данными о user'e
@@ -186,7 +198,7 @@ def format_record(rec: tuple[str, str, float]) -> str:
     parts_fio = [p for p in parts_fio if p]
 
     if len(parts_fio) < 2:
-        raise ValueError('ФИО содержит минимум два слова')
+        raise ValueError('ФИО не может состоять из менее 2-ух слов')
     
     surname = parts_fio[0].capitalize()
     initials = '.'.join(p[0].upper() for p in parts_fio[1:]) + '.' 
