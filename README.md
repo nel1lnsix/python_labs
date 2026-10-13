@@ -9,6 +9,7 @@ python_labs/
 ├─ src/
 │  ├─ lab01/     → см. src/lab01/README.md
 │  ├─ lab02/     → см. src/lab02/README.md
+│  ├─ lab02/     → см  src/lab03/README.md
 |  └─   lib/
 └─ images/       (скриншоты)
 ```
@@ -17,3 +18,4 @@ python_labs/
 
 - **[ЛР1](src/lab01/README.md)** — Ввод/вывод и форматирование
 - **[ЛР2](src/lab02/README.md)** — Коллекции и матрицы
+- **[ЛР3](src/lab03/README.md)** - Словарики
