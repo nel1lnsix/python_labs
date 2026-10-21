@@ -66,13 +66,6 @@ print(repr(read_text("data/lab04/input.txt")))
 print(repr(read_text("data/lab04/input_cp1251.txt", encoding="cp1251")))
 print(repr(read_text_auto("data/lab04/input_cp1251.txt")))
 
-# -> FileNotFoundError, UnicodeDecodeError (cp1251-файл читаем как utf-8)
-for args in [("data/lab04/nope.txt",), ("data/lab04/input_cp1251.txt",)]:
-    try:
-        read_text(*args)
-    except (FileNotFoundError, UnicodeDecodeError) as e:
-        print(type(e).__name__)
-
 # -> 'word,count\na,1\nb,2\n' (папка out/ создаётся сама)
 write_csv([("a", 1), ("b", 2)], TMP / "out" / "rows.csv", header=("word", "count"))
 print(repr(read_text(TMP / "out" / "rows.csv")))
@@ -84,12 +77,6 @@ print(repr(read_text(TMP / "e1.csv")))
 # -> 'word,count\n' (rows=[] и header -> только заголовок)
 write_csv([], TMP / "e2.csv", header=("word", "count"))
 print(repr(read_text(TMP / "e2.csv")))
-
-# -> ValueError: строка 1: длина 1, ожидалась 2
-try:
-    write_csv([("a", 1), ("b",)], TMP / "bad.csv")
-except ValueError as e:
-    print("ValueError:", e)
 ```
 ## Output:
 ![task_A_test_cases](../../images/lab04/task_A_test_cases.png)
@@ -98,17 +85,16 @@ except ValueError as e:
 
 Файл: [text_report.py](text_report.py)
 
-### Посчитать частоты слов одного файла (функции из ЛР3: `normalize`, `tokenize`, `count_freq`).
+
 ```py
 def file_freq(path: Path, encoding: str | None) -> dict[str, int]:
-    # без --encoding кодировку подбираю сама
     if encoding:
         text = read_text(path, encoding)
     else:
         text = read_text_auto(path)
     return count_freq(tokenize(normalize(text)))
 ```
-### Вывести сводку: всего слов, уникальных слов, топ-5.
+
 ```py
 def print_summary(freq: dict[str, int]) -> None:
     print(f"Всего слов: {sum(freq.values())}")
@@ -117,7 +103,7 @@ def print_summary(freq: dict[str, int]) -> None:
     for word, count in top_n(freq, TOP_COUNT):
         print(f"{word}:{count}")
 ```
-### Собрать отчёт: CSV `word,count`, сортировка по убыванию частоты, при равенстве — по алфавиту.
+
 ```py
     try:
         per_file_rows = []
@@ -149,24 +135,6 @@ def print_summary(freq: dict[str, int]) -> None:
 
     print_summary(total)
 ```
-### Аргументы командной строки (`argparse`).
-| Аргумент | По умолчанию | Что делает |
-|---|---|---|
-| `--in` | `data/lab04/input.txt` | входной файл (★ можно несколько) |
-| `--out` | `data/lab04/report.csv` | итоговый CSV `word,count` |
-| `--encoding` | подбирается сама (`utf-8-sig` → `cp1251`) | кодировка входного файла |
-| `--per-file` | — | ★ CSV по каждому файлу `file,word,count` |
-| `--total` | — | ★ общий CSV по всем файлам `word,count` |
-
-### Кодировки
-- Без `--encoding` файл читается через `read_text_auto`: сначала `utf-8-sig` (UTF-8, в т.ч. с BOM из Блокнота), потом `cp1251` (старые русские файлы Windows).
-- С `--encoding` используется ровно указанная кодировка. Если она не подходит — сообщение об ошибке, а не «кракозябры».
-- Выходной CSV **всегда** в UTF-8, независимо от кодировки входа.
-
-### Для пустого и отсутствующего входа
-- **Пустой файл** → отчёт с **только заголовком** `word,count`, в сводке нули. Это не ошибка.
-- **Файла нет** → сообщение `Файл не найден: ...`, код выхода 1, CSV не создаётся.
-- **Неверная / неизвестная кодировка** → сообщение об ошибке, код выхода 1.
 
 # ----------------------------------------
 ## Тест-кейсы для задания B
