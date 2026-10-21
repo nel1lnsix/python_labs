@@ -1,32 +1,30 @@
 """ЛР3, задание B — статистика по тексту из stdin.
 
-Читает весь ввод до EOF.
-Табличный вывод топа (бонус) включается переменной окружения TEXT_STATS_TABLE=1.
-$OutputEncoding = [Text.UTF8Encoding]::new() - кодировать в UTF-8 
-
+Запуск:
+    python text_stats.py          # обычный вывод
+    python text_stats.py --table  # топ-слов в виде таблицы (бонус)
 """
 import os
 import sys
 
+# чтобы импорт lib работал при запуске файла напрямую из папки lab03
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from lib.FuncLib import normalize, tokenize, count_freq, top_n
+from lib.text import normalize, tokenize, count_freq, top_n
+
 TOP_COUNT = 5
-TABLE_MODE = os.environ.get("TEXT_STATS_TABLE") == "1"
 
 
 def print_table(top: list[tuple[str, int]]) -> None:
     header = "слово"
     width = max([len(header)] + [len(word) for word, _ in top])
-    title = f"{header:<{width}} | частота"
-    print(title)
-    print("-" * len(title))
+    print(f"{header:<{width}} | частота")
+    print("-" * width + "-+-" + "-" * len("частота"))
     for word, count in top:
         print(f"{word:<{width}} | {count}")
 
 
 def main() -> None:
-    sys.stdin.reconfigure(encoding="utf-8")
     text = sys.stdin.read()
 
     tokens = tokenize(normalize(text))
@@ -37,7 +35,7 @@ def main() -> None:
     print(f"Уникальных слов: {len(freq)}")
     print(f"Топ-{TOP_COUNT}:")
 
-    if TABLE_MODE:
+    if "--table" in sys.argv[1:]:
         print_table(top)
     else:
         for word, count in top:
