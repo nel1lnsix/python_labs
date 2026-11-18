@@ -55,10 +55,16 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     check_suffix(dst, ".json")
 
     with src.open(encoding="utf-8", newline="") as f:
-        reader = csv.DictReader(f)
-        if not reader.fieldnames or "" in reader.fieldnames:
+        reader = csv.DictReader(f, strict=True)
+        if not reader.fieldnames or any(not name.strip() for name in reader.fieldnames):
             raise ValueError("CSV пустой или без заголовка")
-        rows = list(reader)
+        if len(reader.fieldnames) != len(set(reader.fieldnames)):
+            raise ValueError("Заголовки CSV не должны повторяться")
+        rows = []
+        for row in reader:
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError(f"Строка {reader.line_num}: неверное число полей CSV")
+            rows.append(row)
 
     if not rows:
         raise ValueError("CSV не содержит данных, кроме заголовка")
